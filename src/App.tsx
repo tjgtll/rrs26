@@ -18,8 +18,8 @@ interface AppState {
 
 const STORAGE_KEY = 'carSearchTerm';
 
-export default class App extends React.Component<{}, AppState> {
-  constructor(props: {}) {
+export default class App extends React.Component<object, AppState> {
+  constructor(props: object) {
     super(props);
     this.state = {
       items: [],

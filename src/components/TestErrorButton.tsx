@@ -4,8 +4,8 @@ interface TestErrorButtonState {
   shouldThrow: boolean;
 }
 
-export class TestErrorButton extends React.Component<{}, TestErrorButtonState> {
-  constructor(props: {}) {
+export class TestErrorButton extends React.Component<object, TestErrorButtonState> {
+  constructor(props: object) {
     super(props);
     this.state = { shouldThrow: false };
   }
