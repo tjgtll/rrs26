@@ -1,0 +1,213 @@
+:root {
+  --bg-page: #fff3f2;
+  --bg-search: #ffffff;
+  --border-light: #ffdbdb;
+  --input-border: #ffa7a6;
+  --button-primary: #f25477;
+  --button-primary-hover: #ec275f;
+  --button-disabled: #ffa7a6;
+  --table-header-bg: #d4e0ee;
+  --table-even: #ffdbdb;
+  --table-odd: #fff3f2;
+  --table-hover: #ffa7a6;
+  --text-dark: #2c3e66;
+  --error-bg: #ffdbdb;
+  --error-border: #f25477;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-page);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.search-container {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--bg-page);
+  padding: 1rem 0 0.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.search-card {
+  background-color: var(--bg-search);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--border-light);
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  background-color: var(--bg-page);
+  transition: 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--button-primary);
+  box-shadow: 0 0 0 3px rgba(242, 84, 119, 0.2);
+}
+
+.search-button {
+  padding: 0.75rem 2rem;
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-button:hover:not(:disabled) {
+  background-color: var(--button-primary-hover);
+  transform: scale(1.02);
+}
+
+.search-button:disabled {
+  background-color: var(--button-disabled);
+  cursor: not-allowed;
+}
+
+.main-content {
+  max-width: 1200px;
+  height: 100%;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+  padding-bottom: 5rem;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--input-border);
+}
+
+.results-table th {
+  background-color: var(--table-header-bg);
+  color: var(--text-dark);
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--input-border);
+}
+
+.results-table td {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+}
+
+.results-table tr:nth-child(even) {
+  background-color: var(--table-even);
+}
+
+.results-table tr:nth-child(odd) {
+  background-color: var(--table-odd);
+}
+
+.results-table tr:hover {
+  background-color: var(--table-hover);
+  transition: 0.2s;
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 100%;
+  border-radius: 1rem;
+}
+
+.empty-state p {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--button-primary-hover);
+}
+
+.error-message {
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid var(--input-border);
+  border-top-color: var(--button-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fixed-error-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+}
+
+.error-test-btn {
+  background-color: var(--button-primary-hover);
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: 0.2s;
+}
+
+.error-test-btn:hover {
+  transform: scale(1.0);
+  background-color: #d41f55;
+}
