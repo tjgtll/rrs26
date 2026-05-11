@@ -1,52 +1,50 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Search } from '../components/Search';
 
 describe('Search Component', () => {
   const mockOnSearch = vi.fn();
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-    localStorage.clear();
-  });
-
-  it('renders input and button', () => {
+  it('shows input and button', () => {
     render(<Search initialSearchTerm="" onSearch={mockOnSearch} isLoading={false} />);
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
   });
 
-  it('displays saved search term from localStorage on mount', () => {
-    localStorage.setItem('carSearchTerm', 'Toyota');
+  it('shows saved word from parent', () => {
     render(<Search initialSearchTerm="Toyota" onSearch={mockOnSearch} isLoading={false} />);
     expect(screen.getByRole('textbox')).toHaveValue('Toyota');
   });
 
-  it('shows empty input when no saved term', () => {
-    render(<Search initialSearchTerm="" onSearch={mockOnSearch} isLoading={false} />);
-    expect(screen.getByRole('textbox')).toHaveValue('');
-  });
-
-  it('updates input value on user typing', async () => {
+  it('changes input when user types', async () => {
     render(<Search initialSearchTerm="" onSearch={mockOnSearch} isLoading={false} />);
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Honda');
     expect(input).toHaveValue('Honda');
   });
 
-  it('does not call onSearch if same ', async () => {
-    render(<Search initialSearchTerm="Toyota" onSearch={mockOnSearch} isLoading={false} />);
-    const input = screen.getByRole('textbox');
-    await userEvent.clear(input);
-    await userEvent.type(input, 'Toyota');
-    const button = screen.getByRole('button', { name: /search/i });
-    await userEvent.click(button);
+  it('updates input when parent changes word', () => {
+    const { rerender } = render(<Search initialSearchTerm="Toyota" onSearch={mockOnSearch} isLoading={false} />);
+    expect(screen.getByRole('textbox')).toHaveValue('Toyota');
+    rerender(<Search initialSearchTerm="Honda" onSearch={mockOnSearch} isLoading={false} />);
+    expect(screen.getByRole('textbox')).toHaveValue('Honda');
   });
 
-  it('disables input and button when loading', () => {
+  it('calls search with trimmed word', async () => {
+    render(<Search initialSearchTerm="" onSearch={mockOnSearch} isLoading={false} />);
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, '  Toyota  ');
+    const button = screen.getByRole('button', { name: /search/i });
+    await userEvent.click(button);
+    expect(mockOnSearch).toHaveBeenCalledWith('Toyota');
+  });
+
+  it('disables input and button while loading', () => {
     render(<Search initialSearchTerm="test" onSearch={mockOnSearch} isLoading={true} />);
-    expect(screen.getByRole('textbox')).toBeDisabled();
-    expect(screen.getByRole('button', { name: /searching/i })).toBeDisabled();
+    const input = screen.getByRole('textbox');
+    const button = screen.getByRole('button', { name: /searching/i });
+    expect(input).toBeDisabled();
+    expect(button).toBeDisabled();
   });
 });
