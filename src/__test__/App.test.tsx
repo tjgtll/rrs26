@@ -45,13 +45,17 @@ describe('App', () => {
     expect(mockedFetchVehicles).not.toHaveBeenCalled();
   });
 
- it('saves search term to localStorage after search', async () => {
+  it('saves search term to localStorage after search', async () => {
     mockedFetchVehicles.mockResolvedValue(mockVehicles);
     render(<App />);
+
+    const button = screen.getByRole('button', { name: /search/i });
+    await waitFor(() => expect(button).not.toBeDisabled());
+
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'Honda');
-    const button = screen.getByRole('button', { name: /search/i });
     await userEvent.click(button);
+
     expect(localStorage.getItem('carSearchTerm')).toBe('Honda');
     expect(mockedFetchVehicles).toHaveBeenCalledWith('Honda');
   });
