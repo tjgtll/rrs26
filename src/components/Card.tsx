@@ -1,18 +1,16 @@
 import React from 'react';
-import type { Vehicle } from '../types';
+import type { Pokemon } from '../types';
 
 interface CardProps {
-  vehicle: Vehicle;
+  pokemon: Pokemon;
+  onClick: (name: string) => void;
 }
 
-export class Card extends React.Component<CardProps> {
-  render() {
-    const { make, name } = this.props.vehicle;
-    return (
-      <tr>
-        <td>{make}</td>
-        <td>{name}</td>
-      </tr>
-    );
-  }
-}
+export const Card: React.FC<CardProps> = ({ pokemon, onClick }) => {
+  const { name } = pokemon;
+  return (
+    <div className="card" onClick={() => onClick(name)}>
+      <div className="card-name">{name.toUpperCase()}</div>
+    </div>
+  );
+};

@@ -1,19 +1,25 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { CardList } from '../components/CardList';
-import type { Vehicle } from '../types';
+import type { Pokemon } from '../types';
 
 describe('CardList', () => {
-  const vehicles: Vehicle[] = [
-    { id: 1, make_id: 22, make: 'Toyota', name: 'Corolla' },
-    { id: 2, make_id: 22, make: 'Toyota', name: 'Camry' },
+  const pokemons: Pokemon[] = [
+    { name: 'pikachu', url: '...' },
+    { name: 'charizard', url: '...' },
   ];
+  const mockOnClick = vi.fn();
 
-  it('shows table headers and all cars', () => {
-    render(<CardList vehicles={vehicles} />);
-    expect(screen.getByText('Make')).toBeInTheDocument();
-    expect(screen.getByText('Model')).toBeInTheDocument();
-    expect(screen.getByText('Corolla')).toBeInTheDocument();
-    expect(screen.getByText('Camry')).toBeInTheDocument();
+  it('renders all cards', () => {
+    render(<CardList pokemons={pokemons} onPokemonClick={mockOnClick} />);
+    expect(screen.getByText('PIKACHU')).toBeInTheDocument();
+    expect(screen.getByText('CHARIZARD')).toBeInTheDocument();
+  });
+
+  it('calls onPokemonClick when card clicked', async () => {
+    render(<CardList pokemons={pokemons} onPokemonClick={mockOnClick} />);
+    await userEvent.click(screen.getByText('PIKACHU'));
+    expect(mockOnClick).toHaveBeenCalledWith('pikachu');
   });
 });

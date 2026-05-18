@@ -1,25 +1,18 @@
-import type { Vehicle } from '../types';
+import type { Pokemon, PokemonDetails } from '../types';
 
-const BASE_URL = '/carapi'; 
+const BASE_URL = 'https://pokeapi.co/api/v2';
 
-export async function fetchVehicles(searchTerm: string): Promise<Vehicle[]> {
-  const trimmed = searchTerm.trim();
-  let url: string;
+export async function fetchPokemonList(page: number = 1): Promise<{ results: Pokemon[]; count: number }> {
+  const limit = 10;
+  const offset = (page - 1) * limit;
+  const response = await fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`);
+  if (!response.ok) throw new Error('Failed to fetch Pokémon list');
+  const data = await response.json();
+  return { results: data.results, count: data.count };
+}
 
-  if (trimmed) {
-    url = `${BASE_URL}/api/models/v2?make=${encodeURIComponent(trimmed)}`;
-  } else {
-    url = `${BASE_URL}/api/models/v2?limit=20`;
-  }
-
-  const response = await fetch(url, {
-    headers: { 'accept': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error CarAPI: ${response.status} ${response.statusText}`);
-  }
-
-  const json = await response.json();
-  return json.data;
+export async function fetchPokemonDetails(name: string): Promise<PokemonDetails> {
+  const response = await fetch(`${BASE_URL}/pokemon/${name.toLowerCase()}`);
+  if (!response.ok) throw new Error(`Pokémon "${name}" not found`);
+  return response.json();
 }

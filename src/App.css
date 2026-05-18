@@ -211,3 +211,210 @@ body {
   transform: scale(1.0);
   background-color: #d41f55;
 }
+
+.navigation {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  background: var(--bg-search);
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1rem;
+}
+.navigation a {
+  color: var(--button-primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  transition: 0.2s;
+}
+.navigation a:hover {
+  background: var(--button-primary);
+  color: white;
+}
+
+.master-detail-layout {
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+}
+.left-panel {
+  flex: 1.2;
+}
+.right-panel {
+  flex: 0.9;
+  border-left: 2px solid var(--border-light);
+  padding-left: 1.5rem;
+}
+@media (max-width: 768px) {
+  .master-detail-layout {
+    flex-direction: column;
+  }
+  .right-panel {
+    border-left: none;
+    border-top: 2px solid var(--border-light);
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.pagination button {
+  background: var(--button-primary);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.pagination button:hover:not(:disabled) {
+  background: var(--button-primary-hover);
+  transform: scale(1.02);
+}
+.pagination button:disabled {
+  background: var(--button-disabled);
+  cursor: not-allowed;
+}
+.pagination span {
+  background: var(--bg-search);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid var(--input-border);
+  color: var(--text-dark);
+}
+
+.details-panel {
+  position: relative;
+  background: var(--bg-search);
+  border-radius: 1rem;
+  padding: 1.2rem;
+  border: 1px solid var(--border-light);
+}
+.details-panel h2 {
+  color: var(--button-primary);
+  margin: 0 0 0.8rem;
+}
+.details-panel p {
+  margin: 0.5rem 0;
+  color: var(--text-dark);
+}
+.close-details {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--button-disabled);
+}
+.close-details:hover {
+  color: var(--button-primary-hover);
+}
+
+.about-page {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: var(--bg-search);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid var(--border-light);
+}
+.about-page h1 {
+  color: var(--button-primary);
+}
+.about-page a {
+  display: inline-block;
+  background: var(--button-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+.about-page a:hover {
+  background: var(--button-primary-hover);
+}
+
+.not-found {
+  text-align: center;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: var(--bg-search);
+  border-radius: 1rem;
+  max-width: 500px;
+}
+.not-found h1 {
+  font-size: 4rem;
+  color: var(--button-primary);
+}
+.not-found a {
+  display: inline-block;
+  background: var(--button-primary);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.card {
+  background-color: var(--bg-search);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  background-color: var(--table-hover);
+  border-color: var(--button-primary);
+  transform: translateX(4px);
+}
+
+.card-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.details-panel img {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 1rem;
+  background-color: var(--bg-page);
+  padding: 0.5rem;
+}
+
+.details-image {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 1rem;
+  background-color: var(--bg-page);
+  padding: 0.5rem;
+}

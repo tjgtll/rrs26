@@ -1,20 +1,21 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { Card } from '../components/Card';
-import type { Vehicle } from '../types';
+import type { Pokemon } from '../types';
 
 describe('Card', () => {
-  const vehicle: Vehicle = { id: 1, make_id: 22, make: 'Toyota', name: 'Camry' };
+  const pokemon: Pokemon = { name: 'pikachu', url: '...' };
+  const mockOnClick = vi.fn();
 
-  it('shows car make and model', () => {
-    render(<Card vehicle={vehicle} />);
-    expect(screen.getByText('Toyota')).toBeInTheDocument();
-    expect(screen.getByText('Camry')).toBeInTheDocument();
+  it('shows pokemon name', () => {
+    render(<Card pokemon={pokemon} onClick={mockOnClick} />);
+    expect(screen.getByText('PIKACHU')).toBeInTheDocument(); 
   });
 
-  it('works when model name is empty', () => {
-    const incomplete = { ...vehicle, name: '' };
-    render(<Card vehicle={incomplete} />);
-    expect(screen.getByText('Toyota')).toBeInTheDocument();
+  it('calls onClick with name when clicked', async () => {
+    render(<Card pokemon={pokemon} onClick={mockOnClick} />);
+    await userEvent.click(screen.getByText('PIKACHU'));
+    expect(mockOnClick).toHaveBeenCalledWith('pikachu');
   });
 });

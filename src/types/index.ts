@@ -1,21 +1,19 @@
-export interface Vehicle {
-  id: number;
-  make_id: number;
-  make: string;
-  name: string; 
+export interface Pokemon {
+  name: string;
+  url: string;
 }
 
-export interface ApiResponse {
-  data: Vehicle[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    pages: number;
-  };
-  metadata: {
-    extraction_time: string;
-    cache_hit: boolean;
+export interface PokemonDetails {
+  id: number;
+  name: string;
+  height: number;
+  weight: number;
+  sprites: {
+    other: {
+      'official-artwork': {
+        front_default: string;
+      }
+    }
   };
 }
 
@@ -26,6 +24,6 @@ export interface SearchProps {
 }
 
 export interface ResultsProps {
-  items: Vehicle[];
+  items: Pokemon[];
   error: string | null;
-}           
+}

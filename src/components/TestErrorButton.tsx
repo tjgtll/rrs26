@@ -1,27 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-interface TestErrorButtonState {
-  shouldThrow: boolean;
-}
+export const TestErrorButton: React.FC = () => {
+  const [shouldThrow, setShouldThrow] = useState(false);
 
-export class TestErrorButton extends React.Component<object, TestErrorButtonState> {
-  constructor(props: object) {
-    super(props);
-    this.state = { shouldThrow: false };
+  if (shouldThrow) {
+    throw new Error('Error Boundary');
   }
 
-  handleThrow = () => {
-    this.setState({ shouldThrow: true });
+  const handleThrow = () => {
+    setShouldThrow(true);
   };
 
-  render() {
-    if (this.state.shouldThrow) {
-      throw new Error('Error Boundary');
-    }
-    return (
-      <button onClick={this.handleThrow} className="error-test-btn">
-        error
-      </button>
-    );
-  }
-}
+  return (
+    <button onClick={handleThrow} className="error-test-btn">
+      error
+    </button>
+  );
+};

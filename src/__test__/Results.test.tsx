@@ -1,23 +1,36 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { Results } from '../components/Results';
-import type { Vehicle } from '../types';
+import type { Pokemon } from '../types';
 
 describe('Results', () => {
-  const vehicles: Vehicle[] = [{ id: 1, make_id: 22, make: 'Toyota', name: 'Camry' }];
+  const mockPokemons: Pokemon[] = [
+    { name: 'pikachu', url: '...' },
+    { name: 'charizard', url: '...' },
+  ];
+  const mockOnClick = vi.fn();
 
-  it('shows list of cars', () => {
-    render(<Results items={vehicles} error={null} />);
-    expect(screen.getByText('Camry')).toBeInTheDocument();
+  it('shows list of pokemon names', () => {
+    render(<Results items={mockPokemons} error={null} onItemClick={mockOnClick} />);
+    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
+    expect(screen.getByText(/charizard/i)).toBeInTheDocument();
   });
 
   it('shows error message', () => {
-    render(<Results items={[]} error="API failed" />);
+    render(<Results items={[]} error="API failed" onItemClick={mockOnClick} />);
     expect(screen.getByText('API failed')).toBeInTheDocument();
   });
 
-  it('shows "Error description" when no data', () => {
-    render(<Results items={[]} error={null} />);
-    expect(screen.getByText('Error description')).toBeInTheDocument();
+  it('shows empty state when no items and no error', () => {
+    render(<Results items={[]} error={null} onItemClick={mockOnClick} />);
+    expect(screen.getByText(/no pokémon found/i)).toBeInTheDocument();
+  });
+
+  it('calls onItemClick with pokemon name when row clicked', async () => {
+    render(<Results items={mockPokemons} error={null} onItemClick={mockOnClick} />);
+    const row = screen.getByText(/pikachu/i);
+    await userEvent.click(row);
+    expect(mockOnClick).toHaveBeenCalledWith('pikachu');
   });
 });

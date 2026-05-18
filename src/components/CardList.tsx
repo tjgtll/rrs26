@@ -1,31 +1,18 @@
 import React from 'react';
-import type { Vehicle } from '../types';
+import type { Pokemon } from '../types';
 import { Card } from './Card';
 
 interface CardListProps {
-  vehicles: Vehicle[];
+  pokemons: Pokemon[];
+  onPokemonClick: (name: string) => void;
 }
 
-export class CardList extends React.Component<CardListProps> {
-  render() {
-    const { vehicles } = this.props;
-
-    return (
-      <div className="table-container">
-        <table className="results-table">
-          <thead>
-            <tr>
-              <th>Make</th>
-              <th>Model</th>
-            </tr>
-          </thead>
-            <tbody>
-            {vehicles.map(vehicle => (
-              <Card key={vehicle.id} vehicle={vehicle} />
-            ))}
-          </tbody>
-         </table>
-      </div>
-    );
-  }
-}
+export const CardList: React.FC<CardListProps> = ({ pokemons, onPokemonClick }) => {
+  return (
+    <div className="card-list">
+      {pokemons.map((pokemon) => (
+        <Card key={pokemon.name} pokemon={pokemon} onClick={onPokemonClick} />
+      ))}
+    </div>
+  );
+};
