@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MainPage } from '../pages/MainPage';
+import { ThemeProvider } from '../contexts/ThemeProvider';
 import * as api from '../api/api';
 
 vi.mock('../api/api');
@@ -32,11 +33,13 @@ describe('MainPage', () => {
 
   const renderMainPage = () =>
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-        </Routes>
-      </MemoryRouter>
+      <ThemeProvider>
+        <MemoryRouter initialEntries={['/']}>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+          </Routes>
+        </MemoryRouter>
+      </ThemeProvider>
     );
 
   it('displays list of pokemons', async () => {
@@ -63,8 +66,6 @@ describe('MainPage', () => {
       expect(screen.getByText(/not found/i)).toBeInTheDocument();
     });
   });
-
-  
 
   it('navigates to details when pokemon clicked', async () => {
     renderMainPage();

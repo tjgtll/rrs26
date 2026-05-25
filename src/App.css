@@ -418,3 +418,161 @@ body {
   background-color: var(--bg-page);
   padding: 0.5rem;
 }
+
+
+.dark  {
+  --bg-page: #1a1a2e;
+  --bg-search: #16213e;
+  --border-light: #0f3460;
+  --input-border: #e94560;
+  --button-primary: #e94560;
+  --button-primary-hover: #ff6b6b;
+  --button-disabled: #533483;
+  --table-header-bg: #0f3460;
+  --table-even: #16213e;
+  --table-odd: #1a1a2e;
+  --table-hover: #533483;
+  --text-dark: #e0e0e0;
+  --error-bg: #2d1b2e;
+  --error-border: #e94560;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+}
+
+.theme-toggle button {
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle button:hover {
+  background-color: var(--button-primary-hover);
+  transform: scale(1.02);
+}
+
+.card-checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  accent-color: var(--button-primary);
+  transition: transform 0.1s ease;
+}
+
+.card-checkbox:hover {
+  transform: scale(1.1);
+}
+
+.flyout {
+  margin-top: 1.5rem;
+  background: var(--bg-search);
+  border-radius: 1rem;
+  padding: 1.2rem;
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+  display: flex;
+  gap: 2rem;
+  max-width: 1200px;
+  align-content: space-between;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.flyout h3 {
+  color: var(--button-primary);
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.flyout .selected-count {
+  font-weight: 700;
+  color: var(--text-dark);
+  background: var(--table-even);
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.flyout .actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.flyout button {
+  background: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.flyout button:hover {
+  background: var(--button-primary-hover);
+  transform: translateY(-2px);
+}
+
+.flyout button:first-of-type {
+  background: transparent;
+  border: 1px solid var(--button-primary);
+  color: var(--button-primary);
+}
+
+.flyout button:first-of-type:hover {
+  background: var(--button-primary);
+  color: white;
+}
+
+.left-panel, .right-panel {
+  padding-bottom: 1rem;
+}
+
+.dark  .card {
+  background-color: var(--bg-search);
+}
+
+.dark  .card:hover {
+  background-color: var(--table-hover);
+}
+
+.dark  .results-table th {
+  color: #ffffff;
+}
+
+.dark  .details-panel {
+  background-color: var(--bg-search);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.flyout {
+  animation: slideUp 0.3s ease-out;
+}
+
