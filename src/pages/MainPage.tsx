@@ -6,6 +6,7 @@ import { Loader } from '../components/Loader';
 import { Pagination } from '../components/Pagination';
 import { fetchPokemonList, fetchPokemonDetails } from '../api/api';
 import type { Pokemon } from '../types';
+import { useLocalStorage } from '../hooks/useLocalStorage'; // adjust the import path
 
 const ITEMS_PER_PAGE = 10; 
 
@@ -13,14 +14,38 @@ export const MainPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const pageParam = parseInt(searchParams.get('page') || '1', 10);
+  const [storedSearch, setStoredSearch] = useLocalStorage('pokemonSearch', '');
+  const [storedPage, setStoredPage] = useLocalStorage('pokemonPage', 1);
+
+  const pageParam = parseInt(searchParams.get('page') || '', 10);
   const searchParam = searchParams.get('search') || '';
+
+  const initialSearch = searchParam || storedSearch;
+  const initialPage = !isNaN(pageParam) && pageParam > 0 ? pageParam : storedPage;
 
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(pageParam);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const [currentSearch, setCurrentSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    if (currentSearch) setStoredSearch(currentSearch);
+    else setStoredSearch('');
+  }, [currentSearch, setStoredSearch]);
+
+  useEffect(() => {
+    setStoredPage(currentPage);
+  }, [currentPage, setStoredPage]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (currentSearch) params.set('search', currentSearch);
+    params.set('page', currentPage.toString());
+    setSearchParams(params, { replace: true });
+  }, [currentPage, currentSearch, setSearchParams]);
 
   useEffect(() => {
     const loadList = async () => {
@@ -36,18 +61,18 @@ export const MainPage: React.FC = () => {
         setLoading(false);
       }
     };
-    if (!searchParam) {
+    if (!currentSearch) {
       loadList();
     }
-  }, [currentPage, searchParam]);
+  }, [currentPage, currentSearch]);
 
   useEffect(() => {
     const loadSearchResult = async () => {
-      if (!searchParam) return;
+      if (!currentSearch) return;
       setLoading(true);
       setError(null);
       try {
-        const details = await fetchPokemonDetails(searchParam.toLowerCase());
+        const details = await fetchPokemonDetails(currentSearch.toLowerCase());
         const foundPokemon: Pokemon = {
           name: details.name,
           url: `https://pokeapi.co/api/v2/pokemon/${details.id}/`,
@@ -56,7 +81,7 @@ export const MainPage: React.FC = () => {
         setTotalCount(1);
         setCurrentPage(1);
       } catch {
-        setError(`Pokémon "${searchParam}" not found`);
+        setError(`Pokémon "${currentSearch}" not found`);
         setPokemons([]);
         setTotalCount(0);
       } finally {
@@ -64,22 +89,17 @@ export const MainPage: React.FC = () => {
       }
     };
     loadSearchResult();
-  }, [searchParam]);
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (searchParam) params.set('search', searchParam);
-    params.set('page', currentPage.toString());
-    setSearchParams(params, { replace: true });
-  }, [currentPage, searchParam, setSearchParams]);
+  }, [currentSearch]);
 
   const handlePokemonClick = (name: string) => {
-    navigate(`/details/${name}?page=${currentPage}&search=${searchParam}`);
+    navigate(`/details/${name}?page=${currentPage}&search=${currentSearch}`);
   };
 
   const handleSearch = async (term: string) => {
     const trimmed = term.trim();
     if (!trimmed) {
+      setCurrentSearch('');
+      setCurrentPage(1);
       navigate('/?page=1', { replace: true });
       return;
     }
@@ -88,6 +108,8 @@ export const MainPage: React.FC = () => {
     setError(null);
     try {
       await fetchPokemonDetails(trimmed.toLowerCase());
+      setCurrentSearch(trimmed);
+      setCurrentPage(1);
       navigate(`/details/${trimmed.toLowerCase()}?page=1&search=${trimmed}`, { replace: true });
     } catch {
       setError(`Pokémon "${trimmed}" not found`);
@@ -101,18 +123,18 @@ export const MainPage: React.FC = () => {
   return (
     <div className="master-detail-layout">
       <div className="left-panel">
-       <Search
-        key={searchParam}
-        initialSearchTerm={searchParam}
-        onSearch={handleSearch}
-        isLoading={loading}
+        <Search
+          key={currentSearch}
+          initialSearchTerm={currentSearch}
+          onSearch={handleSearch}
+          isLoading={loading}
         />
         {loading && <Loader />}
         {error && <div className="error-message">{error}</div>}
         {!loading && !error && (
           <>
             <Results items={pokemons} error={null} onItemClick={handlePokemonClick} />
-            {!searchParam && totalPages > 1 && (
+            {!currentSearch && totalPages > 1 && (
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
             )}
           </>

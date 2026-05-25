@@ -3,15 +3,6 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/carapi': {
-        target: 'https://carapi.app',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/carapi/, ''),
-      },
-    },
-  },
   test: {
     globals: true,
     environment: 'jsdom',
