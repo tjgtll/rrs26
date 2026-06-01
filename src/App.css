@@ -576,3 +576,52 @@ body {
   animation: slideUp 0.3s ease-out;
 }
 
+.refresh-button {
+  padding: 0.5rem 1rem;
+  background-color: #ef5350;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-details {
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.refreshing-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+  background: rgba(255,255,255,0.9);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.error-message button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #ef5350;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}

@@ -5,9 +5,9 @@ import { Results } from '../components/Results';
 import { Loader } from '../components/Loader';
 import { Pagination } from '../components/Pagination';
 import { Flyout } from '../components/Flyout';
-import { fetchPokemonList, fetchPokemonDetails } from '../api/api';
-import type { Pokemon } from '../types';
+import { usePokemonList, usePokemonSearch, useInvalidateCache } from '../hooks/usePokemonQueries';
 import { useTheme } from '../hooks/useTheme';
+import type { Pokemon } from '../types';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -15,59 +15,46 @@ export const MainPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { invalidatePokemonList, refetchPokemonList } = useInvalidateCache();
 
   const pageParam = parseInt(searchParams.get('page') || '1', 10);
   const searchParam = searchParams.get('search') || '';
 
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(pageParam);
 
-  useEffect(() => {
-    const loadList = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { results, count } = await fetchPokemonList(currentPage);
-        setPokemons(results);
-        setTotalCount(count);
-      } catch {
-        setError('Failed to load Pokémon list');
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (!searchParam) {
-      loadList();
-    }
-  }, [currentPage, searchParam]);
+  const {
+    data: listData,
+    isLoading: listLoading,
+    error: listError,
+    isFetching: listFetching,
+  } = usePokemonList(currentPage, !searchParam);
 
-  useEffect(() => {
-    const loadSearchResult = async () => {
-      if (!searchParam) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const details = await fetchPokemonDetails(searchParam.toLowerCase());
-        const foundPokemon: Pokemon = {
-          name: details.name,
-          url: `https://pokeapi.co/api/v2/pokemon/${details.id}/`,
-        };
-        setPokemons([foundPokemon]);
-        setTotalCount(1);
-        setCurrentPage(1);
-      } catch {
-        setError(`Pokémon "${searchParam}" not found`);
-        setPokemons([]);
-        setTotalCount(0);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadSearchResult();
-  }, [searchParam]);
+  const {
+    data: searchResult,
+    isLoading: searchLoading,
+    error: searchError,
+  } = usePokemonSearch(searchParam);
+
+  let pokemons: Pokemon[] = [];
+  let totalCount = 0;
+  let loading = false;
+  let error = null;
+
+  if (searchParam) {
+    pokemons = searchResult 
+      ? [{ name: searchResult.name, url: `https://pokeapi.co/api/v2/pokemon/${searchResult.id}/` }]
+      : [];
+    totalCount = searchResult ? 1 : 0;
+    loading = searchLoading;
+    error = searchError?.message || null;
+  } else {
+    pokemons = listData?.results || [];
+    totalCount = listData?.count || 0;
+    loading = listLoading;
+    error = listError?.message || null;
+  }
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -80,58 +67,75 @@ export const MainPage: React.FC = () => {
     navigate(`/details/${name}?page=${currentPage}&search=${searchParam}`);
   };
 
-  const handleSearch = async (term: string) => {
+  const handleSearch = (term: string) => {
     const trimmed = term.trim();
     if (!trimmed) {
       navigate('/?page=1', { replace: true });
       return;
     }
+    navigate(`/?search=${trimmed}&page=1`, { replace: true });
+  };
 
-    setLoading(true);
-    setError(null);
-    try {
-      await fetchPokemonDetails(trimmed.toLowerCase());
-      navigate(`/details/${trimmed.toLowerCase()}?page=1&search=${trimmed}`, { replace: true });
-    } catch {
-      setError(`Pokémon "${trimmed}" not found`);
-    } finally {
-      setLoading(false);
+  const handleRefresh = async () => {
+    if (searchParam) {
+      await invalidatePokemonList(currentPage);
+    } else {
+      await refetchPokemonList(currentPage);
     }
   };
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-
   return (
-    <>
-      <div className="master-detail-layout">
-        <div className="theme-toggle">
-          <button onClick={toggleTheme}>
-            Switch to {theme === 'light' ? 'dark' : 'light'} mode
-          </button>
-        </div>
-        <div className="left-panel">
-          <Search
-            key={searchParam}
-            initialSearchTerm={searchParam}
-            onSearch={handleSearch}
-            isLoading={loading}
-          />
-          {loading && <Loader />}
-          {error && <div className="error-message">{error}</div>}
-          {!loading && !error && (
-            <>
-              <Results items={pokemons} error={null} onItemClick={handlePokemonClick} />
-              {!searchParam && totalPages > 1 && (
-                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-              )}
-            </>
-          )}
-        </div>
-        <div className="right-panel">
-          <Outlet />
-          <Flyout items={pokemons} />
-        </div>
+    <div className="master-detail-layout">
+      <div className="theme-toggle">
+        <button onClick={toggleTheme}>
+          Switch to {theme === 'light' ? 'dark' : 'light'} mode
+        </button>
+        <button 
+          onClick={handleRefresh} 
+          className="refresh-button" 
+          disabled={loading}
+        >
+          🔄 Refresh {listFetching && '(Updating...)'}
+        </button>
       </div>
-    </>
+      <div className="left-panel">
+        <Search
+          key={searchParam}
+          initialSearchTerm={searchParam}
+          onSearch={handleSearch}
+          isLoading={loading}
+        />
+        
+        {loading && <Loader />}
+        
+        {error && (
+          <div className="error-message">
+            <p>Error {error}</p>
+            <button onClick={handleRefresh}>Try Again</button>
+          </div>
+        )}
+        
+        {!loading && !error && (
+          <>
+            <Results 
+              items={pokemons} 
+              error={null} 
+              onItemClick={handlePokemonClick} 
+            />
+            {!searchParam && totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={setCurrentPage} 
+              />
+            )}
+          </>
+        )}
+      </div>
+      <div className="right-panel">
+        <Outlet />
+        <Flyout items={pokemons} />
+      </div>
+    </div>
   );
 };
