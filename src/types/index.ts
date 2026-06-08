@@ -1,29 +1,45 @@
-export interface Pokemon {
+export interface FormData {
+  id: string;
   name: string;
-  url: string;
+  age: number;
+  email: string;
+  gender: 'male' | 'female' | 'other';
+  terms: boolean;
+  password: string;
+  confirmPassword: string;
+  country: string;
+  imageBase64: string;
+  submittedAt: number;
 }
 
-export interface PokemonDetails {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  sprites: {
-    other: {
-      'official-artwork': {
-        front_default: string;
-      }
-    }
-  };
+export type FormSubmissionInput = Omit<FormData, 'id' | 'submittedAt'>;
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
 }
 
-export interface SearchProps {
-  initialSearchTerm: string;
-  onSearch: (term: string) => void;
-  isLoading: boolean;
+export interface CountryAutocompleteProps {
+  id: string;
+  options: string[];
+  value: string;
+  onSelect: (value: string) => void;
 }
 
-export interface ResultsProps {
-  items: Pokemon[];
-  error: string | null;
+export interface UncontrolledFormProps {
+  onSuccess: () => void;
+}
+
+export interface RHFFormProps {
+  onSuccess: () => void;
+}
+
+export interface FormState {
+  submissions: FormData[];
+  countries: string[];
+  addSubmission: (data: FormSubmissionInput) => void;
+  highlightNewId: string | null;
+  setHighlightNewId: (id: string | null) => void;
 }
