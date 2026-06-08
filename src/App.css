@@ -1,0 +1,257 @@
+:root {
+  --bg-page: #fff3f2;
+  --bg-search: #ffffff;
+  --border-light: #ffdbdb;
+  --input-border: #ffa7a6;
+  --button-primary: #f25477;
+  --button-primary-hover: #ec275f;
+  --button-disabled: #ffa7a6;
+  --card-bg: #ffffff;
+  --card-border: #ffdbdb;
+  --card-hover: #ffa7a6;
+  --text-dark: #2c3e66;
+  --error-bg: #ffdbdb;
+  --error-border: #f25477;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --bg-page: #1a1a2e;
+  --bg-search: #16213e;
+  --border-light: #0f3460;
+  --input-border: #e94560;
+  --button-primary: #e94560;
+  --button-primary-hover: #ff6b6b;
+  --button-disabled: #533483;
+  --card-bg: #16213e;
+  --card-border: #0f3460;
+  --card-hover: #533483;
+  --text-dark: #e0e0e0;
+  --error-bg: #2d1b2e;
+  --error-border: #e94560;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-page);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.2s;
+}
+
+h1{
+  color: var(--text-dark);
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Кнопки открытия форм */
+.forms-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0 3rem;
+}
+
+.forms-buttons button {
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.forms-buttons button:hover {
+  background-color: var(--button-primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Список карточек отправленных данных */
+.submissions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.submission-card {
+  background-color: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  width: 280px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.submission-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--card-hover);
+}
+
+.submission-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem;
+  border: 2px solid var(--button-primary);
+  background-color: var(--bg-page);
+}
+
+.submission-card h3 {
+  color: var(--button-primary);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.submission-card p {
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+/* Модальное окно (переопределение inline-стилей компонента Modal) */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background-color: var(--bg-search) !important;
+  color: var(--text-dark);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.modal-content h2 {
+  color: var(--button-primary);
+  margin-bottom: 1rem;
+}
+
+.modal-content button {
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.modal-content button:hover {
+  background-color: var(--button-primary-hover);
+}
+
+/* Стили форм внутри модалок (общие для обоих форм) */
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-dark);
+}
+
+form input, form select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.75rem;
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+form input:focus, form select:focus {
+  outline: none;
+  border-color: var(--button-primary);
+  box-shadow: 0 0 0 2px rgba(242, 84, 119, 0.2);
+}
+
+form input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+form button[type="submit"] {
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 0.5rem;
+}
+
+form button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--button-primary-hover);
+  transform: scale(1.02);
+}
+
+form button[type="submit"]:disabled {
+  background-color: var(--button-disabled);
+  cursor: not-allowed;
+}
+
+/* Сообщения об ошибках */
+form span[style*="color: red"] {
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Адаптация автокомплита стран (список выпадающих вариантов) */
+ul[style*="position: absolute"] {
+  background-color: var(--bg-search) !important;
+  border-color: var(--input-border) !important;
+  color: var(--text-dark);
+}
+
+ul[style*="position: absolute"] li:hover {
+  background-color: var(--card-hover) !important;
+  color: white;
+}
+
+/* Стили для индикатора сложности пароля */
+small {
+  display: block;
+  color: var(--button-primary);
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+/* Анимация появления новых карточек */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.submission-card {
+  animation: slideUp 0.3s ease-out;
+}
